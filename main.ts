@@ -168,11 +168,28 @@ function Race_Select () {
         . . . . . . 7 7 7 7 7 . . . . . 
         `)]
     if (blockSettings.exists("Have Completed The game")) {
-        Race_Select2.push(miniMenu.createMenuItem("Red"))
+        Race_Select2.push(miniMenu.createMenuItem("Red", img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 2 2 2 2 2 . . . . . 
+            . . . . . . 2 2 2 2 2 . . . . . 
+            . . . . . . 2 2 2 2 2 . . . . . 
+            . . . . . . 2 2 2 2 2 . . . . . 
+            . . . . . . 2 2 2 2 2 . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 2 . . 
+            . . . . . . 2 2 2 2 2 . . . . . 
+            . . . . . . 2 2 2 2 2 . . . . . 
+            . . . . . . 2 2 2 2 2 . . . . . 
+            . . . . . . 2 2 2 2 2 . . . . . 
+            `))
     }
     myMenu = miniMenu.createMenuFromArray(Race_Select2)
     myMenu.setMenuStyleProperty(miniMenu.MenuStyleProperty.Rows, 1)
-    myMenu.setMenuStyleProperty(miniMenu.MenuStyleProperty.Height, 20)
+    myMenu.setMenuStyleProperty(miniMenu.MenuStyleProperty.Height, 50)
     myMenu.setMenuStyleProperty(miniMenu.MenuStyleProperty.Width, 100)
     myMenu.setStyleProperty(miniMenu.StyleKind.DefaultAndSelected, miniMenu.StyleProperty.Padding, miniMenu.createBorderBox(
     4,
@@ -180,7 +197,10 @@ function Race_Select () {
     4,
     0
     ))
-    myMenu.setPosition(70, 30)
+    myMenu.setMenuStyleProperty(miniMenu.MenuStyleProperty.Border, 2)
+    myMenu.setMenuStyleProperty(miniMenu.MenuStyleProperty.BorderColor, 6)
+    myMenu.setPosition(84, 70)
+    myMenu.setTitle("Race Select")
 }
 function Green_tutorial () {
     if (blockSettings.readNumber("Checkpoint") == 1) {
