@@ -201,6 +201,51 @@ function Race_Select () {
     myMenu.setMenuStyleProperty(miniMenu.MenuStyleProperty.BorderColor, 6)
     myMenu.setPosition(84, 70)
     myMenu.setTitle("Race Select")
+    myMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
+        if (selectedIndex == 0) {
+            if (blockSettings.exists("Have Played the game before")) {
+                blockSettings.writeNumber("Race", 1)
+                myMenu.close()
+                sprites.destroyAllSpritesOfKind(SpriteKind.Text)
+                Main_menu()
+            } else if (!(blockSettings.exists("Have Played the game before"))) {
+                blockSettings.writeString("World", "Tutorial")
+                blockSettings.writeNumber("Race", 1)
+                blockSettings.writeNumber("Checkpoint", 1)
+                myMenu.close()
+                sprites.destroyAllSpritesOfKind(SpriteKind.Text)
+                Tutorial()
+            }
+        } else if (selectedIndex == 1) {
+            if (blockSettings.exists("Have Played the game before")) {
+                blockSettings.writeNumber("Race", 2)
+                myMenu.close()
+                sprites.destroyAllSpritesOfKind(SpriteKind.Text)
+                Main_menu()
+            } else if (!(blockSettings.exists("Have Played the game before"))) {
+                blockSettings.writeString("World", "Tutorial")
+                blockSettings.writeNumber("Race", 2)
+                blockSettings.writeNumber("Checkpoint", 1)
+                myMenu.close()
+                sprites.destroyAllSpritesOfKind(SpriteKind.Text)
+                Tutorial()
+            }
+        } else if (selectedIndex == 2) {
+            if (blockSettings.exists("Have Played the game before")) {
+                blockSettings.writeNumber("Race", 3)
+                myMenu.close()
+                sprites.destroyAllSpritesOfKind(SpriteKind.Text)
+                Main_menu()
+            } else if (!(blockSettings.exists("Have Played the game before"))) {
+                blockSettings.writeString("World", "Tutorial")
+                blockSettings.writeNumber("Race", 3)
+                blockSettings.writeNumber("Checkpoint", 1)
+                myMenu.close()
+                sprites.destroyAllSpritesOfKind(SpriteKind.Text)
+                Tutorial()
+            }
+        }
+    })
 }
 function Green_tutorial () {
     if (blockSettings.readNumber("Checkpoint") == 1) {
@@ -211,9 +256,19 @@ function Green_tutorial () {
     	
     }
 }
+function Blue_SubBase () {
+    if (blockSettings.readString("World") == "Tutorial") {
+    	
+    } else if (blockSettings.readString("World") == "Main Game") {
+    	
+    }
+}
 function Blue_tutorial () {
     if (blockSettings.readNumber("Checkpoint") == 1) {
-    	
+        color.FadeToBlack.startScreenEffect(5000)
+        pause(5000)
+        color.startFadeFromCurrent(color.originalPalette)
+        Blue_SubBase()
     } else if (blockSettings.readNumber("Checkpoint") == 2) {
     	
     } else if (blockSettings.readNumber("Checkpoint") == 3) {
@@ -1489,8 +1544,18 @@ function Tutorial () {
 let myMenu: miniMenu.MenuSprite = null
 let Race_Select2: miniMenu.MenuItem[] = []
 let textSprite: TextSprite = null
+let Player_Hp = statusbars.create(20, 4, StatusBarKind.Health)
+let Player_Speed = statusbars.create(0, 0, StatusBarKind.Health)
+let Player_Experience_Bar = statusbars.create(20, 4, StatusBarKind.Health)
+let Player_Attack_Value = statusbars.create(0, 0, StatusBarKind.Health)
+let Player_Magic_PowerEnergy = statusbars.create(0, 0, StatusBarKind.Health)
+Player_Hp.setFlag(SpriteFlag.Invisible, true)
+Player_Speed.setFlag(SpriteFlag.Invisible, true)
+Player_Magic_PowerEnergy.setFlag(SpriteFlag.Invisible, true)
+Player_Experience_Bar.setFlag(SpriteFlag.Invisible, true)
+Player_Attack_Value.setFlag(SpriteFlag.Invisible, true)
 scene.setBackgroundImage(assets.image`Start Image`)
-textSprite = textsprite.create("Untitled", 15, 1)
+textSprite = textsprite.create("Reunited", 15, 1)
 textSprite.setMaxFontHeight(10)
 textSprite.setPosition(80, 30)
 if (blockSettings.exists("Have Played the game before")) {
@@ -1519,33 +1584,63 @@ if (blockSettings.exists("Have Played the game before")) {
     blockSettings.writeString("Game Difficulty", "Normal")
 }
 let Wave_time = statusbars.create(0, 0, StatusBarKind.Waves_Time)
-Wave_time.value = 0
 let Attack_Speed_Multiplier = statusbars.create(0, 0, StatusBarKind.Health)
-Attack_Speed_Multiplier.value = 0
 let Enemy_Attack_Multiplier = statusbars.create(0, 0, StatusBarKind.Health)
-Enemy_Attack_Multiplier.value = 0
 let Attack_Multiplier = statusbars.create(0, 0, StatusBarKind.Health)
-Attack_Multiplier.value = 0
 let Enemy_Speed_Multiplier = statusbars.create(0, 0, StatusBarKind.Health)
-Enemy_Speed_Multiplier.value = 0
+let Enemy_amount_per_wave = statusbars.create(0, 0, StatusBarKind.Health)
+let Coin_multiplier = statusbars.create(0, 0, StatusBarKind.Health)
+let Ally_Amount = statusbars.create(0, 0, StatusBarKind.Health)
+let Ally_Damage = statusbars.create(0, 0, StatusBarKind.Health)
+let Ally_Speed = statusbars.create(0, 0, StatusBarKind.Health)
+let Barrier_recovery_time = statusbars.create(0, 0, StatusBarKind.Health)
+let Enemy_Barrier_Recovery_time = statusbars.create(0, 0, StatusBarKind.Health)
+let Ally_Attack_Speed = statusbars.create(0, 0, StatusBarKind.Health)
+let Enemy_Attack_Speed = statusbars.create(0, 0, StatusBarKind.Health)
 if (blockSettings.readString("Game Difficulty") == "Easy") {
     Wave_time.value = 10000
     Attack_Speed_Multiplier.value = 3
     Enemy_Attack_Multiplier.value = 1
     Attack_Multiplier.value = 2
     Enemy_Speed_Multiplier.value = 1
+    Enemy_amount_per_wave.value = 2
+    Coin_multiplier.value = 3
+    Ally_Amount.value = randint(10, 20)
+    Ally_Damage.value = 100
+    Ally_Speed.value = 100
+    Barrier_recovery_time.value = 500
+    Enemy_Barrier_Recovery_time.value = 10000
+    Ally_Attack_Speed.value = 500
+    Enemy_Attack_Speed.value = 5000
 } else if (blockSettings.readString("Game Difficulty") == "Normal") {
     Wave_time.value = 5000
     Attack_Speed_Multiplier.value = 1
     Enemy_Attack_Multiplier.value = 1
     Attack_Multiplier.value = 1
     Enemy_Speed_Multiplier.value = 1
+    Enemy_amount_per_wave.value = 10
+    Coin_multiplier.value = 3
+    Ally_Amount.value = randint(5, 10)
+    Ally_Damage.value = 10
+    Ally_Speed.value = 60
+    Barrier_recovery_time.value = 5000
+    Enemy_Barrier_Recovery_time.value = 5000
+    Ally_Attack_Speed.value = 1000
+    Enemy_Attack_Speed.value = 1000
 } else if (blockSettings.readString("Game Difficulty") == "Hard") {
-    Wave_time.value = 5000
+    Wave_time.value = 1000
     Attack_Speed_Multiplier.value = 1
     Enemy_Attack_Multiplier.value = 2
     Attack_Multiplier.value = 1
     Enemy_Speed_Multiplier.value = 2
+    Enemy_amount_per_wave.value = 20
+    Ally_Amount.value = randint(1, 5)
+    Ally_Damage.value = 1
+    Ally_Speed.value = 30
+    Barrier_recovery_time.value = 10000
+    Enemy_Barrier_Recovery_time.value = 1000
+    Ally_Attack_Speed.value = 5000
+    Enemy_Attack_Speed.value = 500
 } else if (blockSettings.readString("Game Difficulty") == "???") {
 	
 }
@@ -1557,7 +1652,7 @@ pause(500)
 if (blockSettings.exists("Have Played the game before")) {
     if (blockSettings.readString("World") == "Tutorial") {
         Tutorial()
-    } else {
+    } else if (blockSettings.readString("World") == "Main Game") {
         Main_menu()
     }
 } else if (!(blockSettings.exists("Have Played the game before"))) {
